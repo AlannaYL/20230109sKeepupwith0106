@@ -2,11 +2,9 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { api, apiAuth } from '@/plugins/axios'
 import Swal from 'sweetalert2'
-import { useRouter } from 'vue-router'
+import router from '@/plugins/router'
 
 export const useUserStore = defineStore('user', () => {
-  const router = useRouter()
-
   const token = ref('')
   const account = ref('')
   const email = ref('')
@@ -72,6 +70,7 @@ export const useUserStore = defineStore('user', () => {
   const getUser = async () => {
     if (token.value.length === 0) return
     try {
+      // 呼叫請求
       const { data } = await apiAuth.get('/users/me')
       account.value = data.result.account
       email.value = data.result.email

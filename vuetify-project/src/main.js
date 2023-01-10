@@ -13,8 +13,13 @@ import { createApp } from 'vue'
 // Plugins
 import { registerPlugins } from '@/plugins'
 
-const app = createApp(App)
+import '@/styles/main.sass'
 
-registerPlugins(app)
+// 立刻執行function
+(async () => {
+  const app = createApp(App)
 
-app.mount('#app')
+  await registerPlugins(app)
+
+  app.mount('#app')
+})()

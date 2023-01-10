@@ -56,6 +56,16 @@ const router = createRouter({
             login: true,
             admin: true
           }
+        },
+        {
+          path: 'products',
+          name: 'admin-products',
+          component: () => import('@/views/admin/ProductsView.vue'),
+          meta: {
+            title: '購物網 | 商品管理',
+            login: true,
+            admin: true
+          }
         }
       ]
     },
@@ -82,19 +92,13 @@ router.afterEach((to, from) => {
 })
 
 router.beforeEach(async (to, from, next) => {
-  console.log('beforeEach')
   const user = useUserStore()
   if (user.isLogin && (to.path === '/register' || to.path === '/login')) {
     next('/')
   } else if (to.meta.login && !user.isLogin) {
     next('/login')
-  } else if (to.meta.admin) {
-    await user.getUser()
-    if (!user.isAdmin) {
-      next('/')
-    } else {
-      next()
-    }
+  } else if (to.meta.admin && !user.isAdmin) {
+    next('/')
   } else {
     next()
   }

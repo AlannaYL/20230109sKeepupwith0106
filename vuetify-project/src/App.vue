@@ -4,6 +4,4 @@ v-app
 </template>
 
 <script setup>
-import { useUserStore } from '@/stores/user'
-useUserStore().getUser()
 </script>

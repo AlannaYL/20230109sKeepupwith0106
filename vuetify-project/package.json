@@ -16,6 +16,7 @@
     "validator": "^13.7.0",
     "vue": "^3.2.38",
     "vue-router": "^4.1.6",
+    "vue3-img-input": "^1.2.1",
     "vuetify": "^3.0.0",
     "webfontloader": "^1.0.0"
   },

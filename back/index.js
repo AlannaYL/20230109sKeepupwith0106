@@ -3,6 +3,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
 import userRoute from './routes/users.js'
+import productRoute from './routes/products.js'
 import './passport/passport.js'
 
 mongoose.connect(process.env.DB_URL)
@@ -33,6 +34,7 @@ app.use((_, req, res, next) => {
 })
 
 app.use('/users', userRoute)
+app.use('/products', productRoute)
 
 app.all('*', (req, res) => {
   res.status(404).json({ success: false, message: '找不到' })

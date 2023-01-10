@@ -5,7 +5,7 @@ import passportJWT from 'passport-jwt'
 import users from '../models/users.js'
 
 const LocalStrategy = passportLocal.Strategy
-const JWTStrategy = passportJWT.Strategy
+// const JWTStrategy = passportJWT.Strategy
 // 預設帳密欄位是 username 和 password
 // 修改成 account 和 password
 passport.use('login', new LocalStrategy({
@@ -30,11 +30,20 @@ passport.use('login', new LocalStrategy({
   }
 }))
 
-passport.use('jwt', new JWTStrategy({
+// 使用 JWT 策略寫 jwt 方式
+passport.use('jwt', new passportJWT.Strategy({
   jwtFromRequest: passportJWT.ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: process.env.JWT_SECRET,
-  passReqToCallback: true
+  passReqToCallback: true,
+  // 忽略過期檢查
+  ignoreExpiration: true
 }, async (req, payload, done) => {
+  // 檢查有沒有過期
+  // payload 解譯出來的過期時間單位是秒，JS 的 Date.now() 單位是毫秒，所以要 *1000
+  const expired = payload.exp * 1000 < Date.now()
+  if (expired && req.originalUrl !== '/users/extend' && req.originalUrl !== '/users/logout') {
+    return done(null, false, { message: '登入逾時' })
+  }
   const token = req.headers.authorization.split(' ')[1]
   try {
     const user = await users.findOne({ _id: payload._id, tokens: token })
